@@ -13,13 +13,13 @@ export interface RegisterParams {
 }
 
 export const loginAPI = async (params: LoginParams) => {
-  return axiosClient.post("/api/v1/auth/login", params);
+  return axiosClient.post("/auth/login", params);
 };
 
 export const logoutAPI = async () => {
-  return axiosClient.get("/api/v1/auth/logout");
+  return axiosClient.get("/auth/logout");
 };
 
 export const registerAPI = async (params: RegisterParams) => {
-  return axiosClient.post("/api/v1/auth/register", params);
+  return axiosClient.post("/auth/register", params);
 };
