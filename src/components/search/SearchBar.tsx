@@ -13,8 +13,10 @@ import {
   InputAdornment,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
+import { useNavigate } from "react-router-dom";
 
 export const SearchBar: React.FC = () => {
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
   const anchorRef = useRef<HTMLDivElement>(null);
@@ -54,13 +56,6 @@ export const SearchBar: React.FC = () => {
             ),
           }}
         />
-        <Typography
-          variant="caption"
-          color="text.secondary"
-          sx={{ mt: 0.5, display: "block" }}
-        >
-          (n-gram functionality)
-        </Typography>
 
         {open && (
           <Paper
@@ -78,7 +73,7 @@ export const SearchBar: React.FC = () => {
           >
             <List>
               {mockItems.map((item, index) => (
-                <ListItemButton key={index}>
+                <ListItemButton onClick={() => navigate(`/book`)} key={index}>
                   <ListItemText primary={item} />
                 </ListItemButton>
               ))}
