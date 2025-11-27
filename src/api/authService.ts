@@ -5,6 +5,10 @@ export interface LoginParams {
   password: string;
 }
 
+export interface LogoutParams {
+  id: string;
+}
+
 export interface RegisterParams {
   id: string;
   password: string;
@@ -16,8 +20,8 @@ export const loginAPI = async (params: LoginParams) => {
   return axiosClient.post("/auth/login", params);
 };
 
-export const logoutAPI = async () => {
-  return axiosClient.get("/auth/logout");
+export const logoutAPI = async (params: LogoutParams) => {
+  return axiosClient.post("/auth/logout", params);
 };
 
 export const registerAPI = async (params: RegisterParams) => {

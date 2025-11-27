@@ -23,7 +23,7 @@ import { useNavigate } from "react-router-dom";
 export const Header: React.FC = () => {
   const navigate = useNavigate();
   const { mode, toggleColorMode } = useThemeContext();
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, logout, currentUser } = useAuth();
 
   const getModeIcon = () => {
     switch (mode) {
@@ -52,7 +52,9 @@ export const Header: React.FC = () => {
   };
 
   const handleLogout = async () => {
-    await logout();
+    if (currentUser) {
+      await logout({ id: currentUser.id });
+    }
     handleMenuClose();
   };
 
