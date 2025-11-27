@@ -7,7 +7,10 @@ import {
   TextField,
   Button,
   Stack,
+  Alert,
+  CircularProgress,
 } from "@mui/material";
+import { useAuth } from "../../context/AuthContext";
 
 interface SignupModalProps {
   open: boolean;
@@ -15,6 +18,7 @@ interface SignupModalProps {
 }
 
 export const SignupModal: React.FC<SignupModalProps> = ({ open, onClose }) => {
+  const { register } = useAuth();
   const [formData, setFormData] = useState({
     id: "",
     name: "",
@@ -22,6 +26,8 @@ export const SignupModal: React.FC<SignupModalProps> = ({ open, onClose }) => {
     password: "",
     confirmPassword: "",
   });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -30,10 +36,30 @@ export const SignupModal: React.FC<SignupModalProps> = ({ open, onClose }) => {
     });
   };
 
-  const handleSubmit = () => {
-    // Simulate signup logic
-    console.log("Signup data:", formData);
-    onClose();
+  const handleSubmit = async () => {
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      await register({
+        id: formData.id,
+        password: formData.password,
+        name: formData.name,
+        email: formData.email,
+      });
+      onClose();
+    } catch (err: any) {
+      setError(
+        err.response?.data?.message || "Registration failed. Please try again."
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -41,6 +67,7 @@ export const SignupModal: React.FC<SignupModalProps> = ({ open, onClose }) => {
       <DialogTitle>Sign Up</DialogTitle>
       <DialogContent>
         <Stack spacing={2} sx={{ mt: 1 }}>
+          {error && <Alert severity="error">{error}</Alert>}
           <TextField
             label="ID"
             name="id"
@@ -48,6 +75,7 @@ export const SignupModal: React.FC<SignupModalProps> = ({ open, onClose }) => {
             fullWidth
             value={formData.id}
             onChange={handleChange}
+            disabled={loading}
           />
           <TextField
             label="Name"
@@ -56,6 +84,7 @@ export const SignupModal: React.FC<SignupModalProps> = ({ open, onClose }) => {
             fullWidth
             value={formData.name}
             onChange={handleChange}
+            disabled={loading}
           />
           <TextField
             label="Email"
@@ -65,6 +94,7 @@ export const SignupModal: React.FC<SignupModalProps> = ({ open, onClose }) => {
             fullWidth
             value={formData.email}
             onChange={handleChange}
+            disabled={loading}
           />
           <TextField
             label="Password"
@@ -75,6 +105,7 @@ export const SignupModal: React.FC<SignupModalProps> = ({ open, onClose }) => {
             value={formData.password}
             onChange={handleChange}
             helperText="Password must be at least 8 characters long and contain special characters."
+            disabled={loading}
           />
           <TextField
             label="Confirm Password"
@@ -84,13 +115,16 @@ export const SignupModal: React.FC<SignupModalProps> = ({ open, onClose }) => {
             fullWidth
             value={formData.confirmPassword}
             onChange={handleChange}
+            disabled={loading}
           />
         </Stack>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose}>Cancel</Button>
-        <Button onClick={handleSubmit} variant="contained">
-          Sign Up
+        <Button onClick={onClose} disabled={loading}>
+          Cancel
+        </Button>
+        <Button onClick={handleSubmit} variant="contained" disabled={loading}>
+          {loading ? <CircularProgress size={24} /> : "Sign Up"}
         </Button>
       </DialogActions>
     </Dialog>

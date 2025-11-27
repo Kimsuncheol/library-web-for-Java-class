@@ -14,10 +14,10 @@ export const Dashboard: React.FC = () => {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          pt: 10,
+          pt: 20,
         }}
       >
-        <Typography variant="h3" component="h1" gutterBottom sx={{ mb: 4 }}>
+        <Typography variant="h3" component="h1" gutterBottom sx={{ mb: 8 }}>
           Library Search
         </Typography>
         <SearchBar />

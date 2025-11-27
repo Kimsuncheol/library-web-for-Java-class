@@ -13,6 +13,7 @@ import { LoginModal } from "../auth/LoginModal";
 import { SignupModal } from "../auth/SignupModal";
 import { AddBookModal } from "../books/AddBookModal";
 import { useThemeContext } from "../../context/ThemeContext";
+import { useAuth } from "../../context/AuthContext";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import SettingsBrightnessIcon from "@mui/icons-material/SettingsBrightness";
@@ -22,6 +23,7 @@ import { useNavigate } from "react-router-dom";
 export const Header: React.FC = () => {
   const navigate = useNavigate();
   const { mode, toggleColorMode } = useThemeContext();
+  const { isAuthenticated, logout } = useAuth();
 
   const getModeIcon = () => {
     switch (mode) {
@@ -34,7 +36,6 @@ export const Header: React.FC = () => {
     }
   };
 
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   // Modal states
@@ -50,8 +51,8 @@ export const Header: React.FC = () => {
     setAnchorEl(null);
   };
 
-  const handleLogout = () => {
-    setIsLoggedIn(false);
+  const handleLogout = async () => {
+    await logout();
     handleMenuClose();
   };
 
@@ -85,7 +86,7 @@ export const Header: React.FC = () => {
             </IconButton>
           </Tooltip>
 
-          {isLoggedIn ? (
+          {isAuthenticated ? (
             <div>
               <IconButton
                 size="large"
@@ -128,7 +129,6 @@ export const Header: React.FC = () => {
       <LoginModal
         open={loginOpen}
         onClose={() => setLoginOpen(false)}
-        onLogin={() => setIsLoggedIn(true)}
         onSwitchToSignup={() => {
           setLoginOpen(false);
           setSignupOpen(true);

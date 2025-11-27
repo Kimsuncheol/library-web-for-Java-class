@@ -9,29 +9,46 @@ import {
   Stack,
   Typography,
   Link,
+  Alert,
+  CircularProgress,
 } from "@mui/material";
+import { useAuth } from "../../context/AuthContext";
 
 interface LoginModalProps {
   open: boolean;
   onClose: () => void;
-  onLogin: () => void;
   onSwitchToSignup: () => void;
 }
 
 export const LoginModal: React.FC<LoginModalProps> = ({
   open,
   onClose,
-  onLogin,
   onSwitchToSignup,
 }) => {
+  const { login } = useAuth();
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = () => {
-    // Simulate login logic
-    if (id && password) {
-      onLogin();
+  const handleSubmit = async () => {
+    if (!id || !password) {
+      setError("Please enter both ID and Password.");
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      await login({ id, password });
       onClose();
+    } catch (err: any) {
+      setError(
+        err.response?.data?.message || "Login failed. Please try again."
+      );
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -40,6 +57,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
       <DialogTitle>Sign In</DialogTitle>
       <DialogContent>
         <Stack spacing={2} sx={{ mt: 1 }}>
+          {error && <Alert severity="error">{error}</Alert>}
           <TextField
             label="ID"
             variant="outlined"
@@ -47,6 +65,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
             value={id}
             onChange={(e) => setId(e.target.value)}
             autoFocus
+            disabled={loading}
           />
           <TextField
             label="Password"
@@ -55,6 +74,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
             fullWidth
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            disabled={loading}
           />
           <Typography variant="body2" align="center">
             Don't have an account?{" "}
@@ -65,6 +85,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                 onClose();
                 onSwitchToSignup();
               }}
+              disabled={loading}
             >
               Sign up
             </Link>
@@ -72,9 +93,11 @@ export const LoginModal: React.FC<LoginModalProps> = ({
         </Stack>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose}>Cancel</Button>
-        <Button onClick={handleSubmit} variant="contained">
-          Sign In
+        <Button onClick={onClose} disabled={loading}>
+          Cancel
+        </Button>
+        <Button onClick={handleSubmit} variant="contained" disabled={loading}>
+          {loading ? <CircularProgress size={24} /> : "Sign In"}
         </Button>
       </DialogActions>
     </Dialog>
