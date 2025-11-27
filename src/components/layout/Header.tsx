@@ -13,8 +13,26 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { LoginModal } from "../auth/LoginModal";
 import { SignupModal } from "../auth/SignupModal";
 import { AddBookModal } from "../books/AddBookModal";
+import { useThemeContext } from "../../context/ThemeContext";
+import Brightness7Icon from "@mui/icons-material/Brightness7";
+import Brightness4Icon from "@mui/icons-material/Brightness4";
+import SettingsBrightnessIcon from "@mui/icons-material/SettingsBrightness";
+import { Tooltip } from "@mui/material";
 
 export const Header: React.FC = () => {
+  const { mode, toggleColorMode } = useThemeContext();
+
+  const getModeIcon = () => {
+    switch (mode) {
+      case "light":
+        return <Brightness7Icon />;
+      case "dark":
+        return <Brightness4Icon />;
+      default:
+        return <SettingsBrightnessIcon />;
+    }
+  };
+
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
@@ -57,6 +75,18 @@ export const Header: React.FC = () => {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             Library
           </Typography>
+
+          <Tooltip
+            title={`Theme: ${mode.charAt(0).toUpperCase() + mode.slice(1)}`}
+          >
+            <IconButton
+              color="inherit"
+              onClick={toggleColorMode}
+              sx={{ mr: 1 }}
+            >
+              {getModeIcon()}
+            </IconButton>
+          </Tooltip>
 
           {isLoggedIn ? (
             <div>
