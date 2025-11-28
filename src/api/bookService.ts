@@ -1,5 +1,10 @@
 import axiosClient from "./axiosClient";
-import { Book } from "../types/book";
+import { Book, History } from "../types/book";
+
+export const getHistoriesAPI = async (): Promise<History[]> => {
+  const response = await axiosClient.get<History[]>("/histories");
+  return response.data;
+};
 
 export const getBooks = async (): Promise<Book[]> => {
   const response = await axiosClient.get<Book[]>("/books");

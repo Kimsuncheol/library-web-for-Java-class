@@ -45,14 +45,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     setIsLoading(true);
     try {
       await loginAPI(params);
-      // In a real app, you would get the user data from the response
-      // For now, we'll simulate it or assume the backend sets a cookie
-      // and we might need another call to /me to get user details.
-      // For this specific request, I will just set a dummy user or
-      // if the loginAPI returns user data, use that.
-      // Assuming loginAPI returns nothing useful for now based on previous code.
-      // Let's set a mock user for now to satisfy the requirement,
-      // or better, if the user ID is passed in params, use that.
       setCurrentUser({
         id: params.id,
         name: "User",
@@ -60,6 +52,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         password: "",
         isAdmin: false,
       });
+
       setIsAuthenticated(true);
     } finally {
       setIsLoading(false);

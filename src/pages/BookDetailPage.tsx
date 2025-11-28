@@ -11,7 +11,6 @@ import {
   Alert,
   CircularProgress,
 } from "@mui/material";
-import { Header } from "../components/layout/Header";
 import { getBook, borrowBook, returnBook } from "../api/bookService";
 import { Book } from "../types/book";
 
@@ -70,7 +69,6 @@ export const BookDetailPage: React.FC = () => {
       <Box
         sx={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}
       >
-        <Header />
         <Container
           maxWidth="lg"
           sx={{
@@ -93,7 +91,6 @@ export const BookDetailPage: React.FC = () => {
       <Box
         sx={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}
       >
-        <Header />
         <Container maxWidth="lg" sx={{ mt: 4, mb: 4, flexGrow: 1 }}>
           <Alert severity="error">{error}</Alert>
         </Container>
@@ -103,7 +100,6 @@ export const BookDetailPage: React.FC = () => {
 
   return (
     <Box sx={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
-      <Header />
       <Container maxWidth="lg" sx={{ mt: 4, mb: 4, flexGrow: 1 }}>
         {successMessage && (
           <Alert severity="success" sx={{ mb: 2 }}>

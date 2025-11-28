@@ -10,7 +10,6 @@ import {
   Button,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import { Header } from "../components/layout/Header";
 import { SearchBar } from "../components/search/SearchBar";
 import { getBooks } from "../api/bookService";
 import { Book } from "../types/book";
@@ -33,7 +32,6 @@ export const Dashboard: React.FC = () => {
 
   return (
     <Box sx={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
-      <Header />
       <Container maxWidth="lg" sx={{ mt: 4, mb: 4, flexGrow: 1 }}>
         <Box sx={{ display: "flex", justifyContent: "space-between", mb: 4 }}>
           <Typography variant="h4" component="h1">

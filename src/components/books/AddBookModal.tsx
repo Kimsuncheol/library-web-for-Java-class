@@ -9,6 +9,7 @@ import {
   Stack,
   Box,
   Typography,
+  useTheme,
 } from "@mui/material";
 
 interface AddBookModalProps {
@@ -38,6 +39,7 @@ export const AddBookModal: React.FC<AddBookModalProps> = ({
     console.log("Adding book:", formData);
     onClose();
   };
+  const theme = useTheme();
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
@@ -86,10 +88,10 @@ export const AddBookModal: React.FC<AddBookModalProps> = ({
               borderRadius: 2,
               p: 4,
               textAlign: "center",
-              bgcolor: "#f9f9f9",
+              bgcolor: theme.palette.background.paper,
               cursor: "pointer",
               "&:hover": {
-                bgcolor: "#f0f0f0",
+                bgcolor: theme.palette.action.hover,
               },
             }}
           >

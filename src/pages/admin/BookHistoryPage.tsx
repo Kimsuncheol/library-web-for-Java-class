@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Typography,
@@ -9,60 +9,70 @@ import {
   TableHead,
   TableRow,
   Paper,
+  Chip,
   IconButton,
   Stack,
-  Chip,
+  CircularProgress,
+  Alert,
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useNavigate } from "react-router-dom";
-
-// Mock Data
-const historyRows = [
-  {
-    id: 1,
-    title: "The Great Gatsby",
-    user: "John Doe",
-    status: "Borrowed",
-    date: "2025-11-20",
-  },
-  {
-    id: 2,
-    title: "To Kill a Mockingbird",
-    user: "Jane Smith",
-    status: "Returned",
-    date: "2025-11-22",
-  },
-  {
-    id: 3,
-    title: "1984",
-    user: "Alice Johnson",
-    status: "Borrowed",
-    date: "2025-11-25",
-  },
-  {
-    id: 4,
-    title: "Pride and Prejudice",
-    user: "Bob Brown",
-    status: "Returned",
-    date: "2025-11-26",
-  },
-  {
-    id: 5,
-    title: "Moby Dick",
-    user: "Charlie Davis",
-    status: "Borrowed",
-    date: "2025-11-28",
-  },
-];
+import { getHistoriesAPI } from "../../api/bookService";
+import { History } from "../../types/book";
 
 export const BookHistoryPage: React.FC = () => {
   const navigate = useNavigate();
+  const [histories, setHistories] = useState<History[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchHistories = async () => {
+      try {
+        const data = await getHistoriesAPI();
+        setHistories(data);
+      } catch (err) {
+        setError("Failed to fetch book history.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchHistories();
+  }, []);
+
+  const handleBackClick = () => {
+    navigate("/admin");
+  };
+
+  if (loading) {
+    return (
+      <Box
+        sx={{
+          minHeight: "100vh",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Box sx={{ p: 4 }}>
+        <Alert severity="error">{error}</Alert>
+      </Box>
+    );
+  }
 
   return (
-    <Box sx={{ p: 4, maxWidth: 1000, mx: "auto" }}>
+    <Box sx={{ p: 4 }}>
       {/* Header */}
       <Stack direction="row" alignItems="center" spacing={2} sx={{ mb: 4 }}>
-        <IconButton onClick={() => navigate("/admin")} aria-label="back">
+        <IconButton onClick={handleBackClick} aria-label="back">
           <ArrowBackIcon />
         </IconButton>
         <Typography variant="h4" component="h1" fontWeight="bold">
@@ -73,39 +83,54 @@ export const BookHistoryPage: React.FC = () => {
       {/* Table */}
       <TableContainer component={Paper} elevation={2}>
         <Table sx={{ minWidth: 650 }} aria-label="book history table">
-          <TableHead sx={{ bgcolor: "grey.100" }}>
+          <TableHead sx={{ bgcolor: "grey.800" }}>
             <TableRow>
-              <TableCell sx={{ fontWeight: "bold" }}>ID</TableCell>
-              <TableCell sx={{ fontWeight: "bold" }}>Book Title</TableCell>
-              <TableCell sx={{ fontWeight: "bold" }}>User Name</TableCell>
-              <TableCell sx={{ fontWeight: "bold" }}>Status</TableCell>
-              <TableCell sx={{ fontWeight: "bold" }}>Date</TableCell>
+              <TableCell sx={{ fontWeight: "bold", color: "white" }}>
+                ID
+              </TableCell>
+              <TableCell sx={{ fontWeight: "bold", color: "white" }}>
+                Book Title
+              </TableCell>
+              <TableCell sx={{ fontWeight: "bold", color: "white" }}>
+                User Name
+              </TableCell>
+              <TableCell sx={{ fontWeight: "bold", color: "white" }}>
+                Status
+              </TableCell>
+              <TableCell sx={{ fontWeight: "bold", color: "white" }}>
+                Date
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {historyRows.map((row) => (
+            {histories.map((history) => (
               <TableRow
-                key={row.id}
-                sx={{
-                  "&:last-child td, &:last-child th": { border: 0 },
-                  "&:hover": { bgcolor: "action.hover" },
-                }}
+                key={history.id}
+                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
                 <TableCell component="th" scope="row">
-                  {row.id}
+                  {history.id}
                 </TableCell>
-                <TableCell>{row.title}</TableCell>
-                <TableCell>{row.user}</TableCell>
+                <TableCell>{history.book.title}</TableCell>
+                <TableCell>User</TableCell> {/* Placeholder for User Name */}
                 <TableCell>
                   <Chip
-                    label={row.status}
-                    color={row.status === "Borrowed" ? "primary" : "success"}
-                    variant="outlined"
+                    label={
+                      history.content.includes("Borrowed")
+                        ? "Borrowed"
+                        : "Returned"
+                    }
+                    color={
+                      history.content.includes("Borrowed")
+                        ? "primary"
+                        : "success"
+                    }
                     size="small"
-                    sx={{ fontWeight: "bold" }}
                   />
                 </TableCell>
-                <TableCell>{row.date}</TableCell>
+                <TableCell>
+                  {new Date(history.date).toLocaleDateString()}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

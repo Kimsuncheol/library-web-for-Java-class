@@ -4,11 +4,13 @@ import { Dashboard } from "./pages/Dashboard";
 import { BookDetailPage } from "./pages/BookDetailPage";
 import { AdminDashboard } from "./pages/admin/AdminDashboard";
 import { BookHistoryPage } from "./pages/admin/BookHistoryPage";
+import { Header } from "./components/layout/Header";
 import "./App.css";
 
 function App() {
   return (
     <Router>
+      <Header />
       <Routes>
         <Route path="/" element={<Dashboard />} />
         <Route path="/book" element={<BookDetailPage />} />

@@ -5,3 +5,10 @@ export interface Book {
   author: string;
   coverImage?: string; // Optional, as per requirements "potentially an image URL"
 }
+
+export interface History {
+  id: number;
+  book: Book;
+  date: Date;
+  content: string;
+}
