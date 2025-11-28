@@ -94,7 +94,11 @@ export const AdminDashboard: React.FC = () => {
         </Box>
       </Stack>
 
-      <AddBookModal open={addBookOpen} onClose={() => setAddBookOpen(false)} />
+      <AddBookModal
+        open={addBookOpen}
+        onClose={() => setAddBookOpen(false)}
+        onSuccess={() => setAddBookOpen(false)}
+      />
     </Box>
   );
 };

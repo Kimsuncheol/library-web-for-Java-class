@@ -15,14 +15,10 @@ export const getBook = async (isbn: string): Promise<Book | false> => {
   try {
     const response = await axiosClient.get<Book>("/book", {
       params: { isbn },
+      withCredentials: true,
     });
     return response.data;
   } catch (error) {
-    // Assuming 404 or similar means not found, but requirement says "Returns: Book object OR false (boolean) if not found."
-    // If the API actually returns boolean false on 200 OK for not found, the above works.
-    // If it returns 404, we might need to catch it.
-    // Given the requirement "Returns: Book object OR false (boolean) if not found", let's assume the API might return false directly or we handle error.
-    // However, usually APIs return 404. Let's assume if it throws, we return false.
     return false;
   }
 };
@@ -31,7 +27,9 @@ export const addBook = async (
   book: Omit<Book, "coverImage">
 ): Promise<boolean> => {
   try {
-    const response = await axiosClient.post<boolean>("/book", book);
+    const response = await axiosClient.post<boolean>("/book", book, {
+      withCredentials: true,
+    });
     return response.data;
   } catch (error) {
     return false;
@@ -39,12 +37,19 @@ export const addBook = async (
 };
 
 export const deleteBook = async (isbn: string): Promise<void> => {
-  await axiosClient.delete("/book", { params: { isbn } });
+  await axiosClient.delete("/book", {
+    params: { isbn },
+    withCredentials: true,
+  });
 };
 
 export const borrowBook = async (isbn: string): Promise<boolean> => {
   try {
-    const response = await axiosClient.post<boolean>("/borrow", { isbn });
+    const response = await axiosClient.post<boolean>(
+      "/borrow",
+      { isbn },
+      { withCredentials: true }
+    );
     return response.data;
   } catch (error) {
     return false;
@@ -53,7 +58,13 @@ export const borrowBook = async (isbn: string): Promise<boolean> => {
 
 export const returnBook = async (isbn: string): Promise<boolean> => {
   try {
-    const response = await axiosClient.post<boolean>("/return", { isbn });
+    const response = await axiosClient.post<boolean>(
+      "/return",
+      { isbn },
+      {
+        withCredentials: true,
+      }
+    );
     return response.data;
   } catch (error) {
     return false;

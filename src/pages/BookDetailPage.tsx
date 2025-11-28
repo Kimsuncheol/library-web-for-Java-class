@@ -24,14 +24,17 @@ export const BookDetailPage: React.FC = () => {
 
   useEffect(() => {
     const fetchBook = async () => {
+      console.log("isbn", isbn);
       if (!isbn) {
         setError("No ISBN provided");
         setLoading(false);
         return;
       }
       const data = await getBook(isbn);
+      console.log("data", data);
       if (data) {
         setBook(data);
+        console.log("data", data);
       } else {
         setError("Book not found");
       }

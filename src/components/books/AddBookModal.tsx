@@ -11,15 +11,18 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
+import { addBook } from "../../api/bookService";
 
 interface AddBookModalProps {
   open: boolean;
   onClose: () => void;
+  onSuccess: () => void;
 }
 
 export const AddBookModal: React.FC<AddBookModalProps> = ({
   open,
   onClose,
+  onSuccess,
 }) => {
   const [formData, setFormData] = useState({
     title: "",
@@ -35,9 +38,19 @@ export const AddBookModal: React.FC<AddBookModalProps> = ({
     });
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     console.log("Adding book:", formData);
-    onClose();
+    const success = await addBook(formData);
+    if (success) {
+      onSuccess();
+      setFormData({
+        title: "",
+        author: "",
+        description: "",
+        isbn: "",
+      });
+      onClose();
+    }
   };
   const theme = useTheme();
 
