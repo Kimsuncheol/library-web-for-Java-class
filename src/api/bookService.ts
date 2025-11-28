@@ -34,9 +34,7 @@ export const addBook = async (
 };
 
 export const deleteBook = async (isbn: string): Promise<void> => {
-  await axiosClient.delete("/book", {
-    params: { isbn },
-  });
+  await axiosClient.delete("/book", { params: { isbn } });
 };
 
 export const borrowBook = async (isbn: string): Promise<boolean> => {

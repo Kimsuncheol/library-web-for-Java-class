@@ -34,6 +34,22 @@ export const SearchBar: React.FC = () => {
     "Book Item 2",
     "Book Item 3",
     "Book Item 4",
+    "Book Item 5",
+    "Book Item 6",
+    "Book Item 7",
+    "Book Item 8",
+    "Book Item 9",
+    "Book Item 10",
+    "Book Item 11",
+    "Book Item 12",
+    "Book Item 13",
+    "Book Item 14",
+    "Book Item 15",
+    "Book Item 16",
+    "Book Item 17",
+    "Book Item 18",
+    "Book Item 19",
+    "Book Item 20",
   ];
 
   return (
@@ -67,18 +83,35 @@ export const SearchBar: React.FC = () => {
               mt: 1,
               zIndex: 10,
               maxHeight: 300,
+              p: 1.5,
               overflow: "auto",
             }}
             elevation={3}
           >
-            <List>
-              {mockItems.map((item, index) => (
-                <ListItemButton onClick={() => navigate(`/book`)} key={index}>
-                  <ListItemText primary={item} />
-                </ListItemButton>
-              ))}
-            </List>
-            <Box sx={{ p: 1, borderTop: "1px solid #eee" }}>
+            {showHistory ? (
+              <List sx={{ maxHeight: "200px", overflow: "auto" }}>
+                {mockItems.map((item, index) => (
+                  <ListItemButton onClick={() => navigate(`/book`)} key={index}>
+                    <ListItemText primary={item} />
+                  </ListItemButton>
+                ))}
+              </List>
+            ) : (
+              <Box
+                sx={{
+                  p: 1,
+                  height: "200px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <Typography variant="body2" color="textSecondary">
+                  No search history
+                </Typography>
+              </Box>
+            )}
+            <Box sx={{ p: 1.5 }}>
               <FormControlLabel
                 control={
                   <Switch

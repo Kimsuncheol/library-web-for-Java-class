@@ -63,6 +63,11 @@ export const Header: React.FC = () => {
     handleMenuClose();
   };
 
+  const handleAdminClick = () => {
+    navigate("/admin");
+    handleMenuClose();
+  };
+
   return (
     <>
       <AppBar position="static">
@@ -117,6 +122,7 @@ export const Header: React.FC = () => {
               >
                 <MenuItem disabled>Display Name</MenuItem>
                 <MenuItem onClick={handleAddBookClick}>Add Book</MenuItem>
+                <MenuItem onClick={handleAdminClick}>Admin Dashboard</MenuItem>
                 <MenuItem onClick={handleLogout}>Sign out</MenuItem>
               </Menu>
             </div>
