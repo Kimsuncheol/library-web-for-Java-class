@@ -1,16 +1,14 @@
-import React, { useState } from "react";
+import React from "react";
 import { Box, Typography, Card, CardContent, Stack } from "@mui/material";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import MenuBookOutlinedIcon from "@mui/icons-material/MenuBookOutlined";
 import HistoryIcon from "@mui/icons-material/History";
 import { useNavigate } from "react-router-dom";
-import { AddBookModal } from "../../components/books/AddBookModal";
 
 export const AdminDashboard: React.FC = () => {
   const navigate = useNavigate();
-  const [addBookOpen, setAddBookOpen] = useState<boolean>(false);
 
-  const handleAddBookClick = () => {
-    setAddBookOpen(true);
+  const handleBookManagementClick = () => {
+    navigate("/admin/books");
   };
 
   return (
@@ -51,21 +49,20 @@ export const AdminDashboard: React.FC = () => {
                 boxShadow: 6,
               },
             }}
-            onClick={handleAddBookClick}
+            onClick={handleBookManagementClick}
           >
             <CardContent>
               <Stack spacing={2} alignItems="center">
-                <AddCircleOutlineIcon
-                  sx={{ fontSize: 60, color: "primary.main" }}
+                <MenuBookOutlinedIcon
+                  sx={{ fontSize: 60, color: "primary.light" }}
                 />
                 <Typography variant="h5" component="div" align="center">
-                  Add a Book
+                  Book Management
                 </Typography>
               </Stack>
             </CardContent>
           </Card>
         </Box>
-
         <Box sx={{ flex: 1 }}>
           <Card
             sx={{
@@ -86,19 +83,13 @@ export const AdminDashboard: React.FC = () => {
               <Stack spacing={2} alignItems="center">
                 <HistoryIcon sx={{ fontSize: 60, color: "secondary.main" }} />
                 <Typography variant="h5" component="div" align="center">
-                  Book History
+                  Borrow/Return History
                 </Typography>
               </Stack>
             </CardContent>
           </Card>
         </Box>
       </Stack>
-
-      <AddBookModal
-        open={addBookOpen}
-        onClose={() => setAddBookOpen(false)}
-        onSuccess={() => setAddBookOpen(false)}
-      />
     </Box>
   );
 };

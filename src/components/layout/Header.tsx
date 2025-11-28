@@ -48,6 +48,7 @@ export const Header: React.FC = () => {
   };
 
   const handleLogout = async () => {
+    console.log("logging out");
     if (currentUser) {
       await logout({ id: currentUser.id });
     }

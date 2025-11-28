@@ -9,8 +9,8 @@ import {
   Stack,
   Box,
   Typography,
-  useTheme,
 } from "@mui/material";
+import { useDropzone } from "react-dropzone";
 import { addBook } from "../../api/bookService";
 
 interface AddBookModalProps {
@@ -30,6 +30,21 @@ export const AddBookModal: React.FC<AddBookModalProps> = ({
     description: "",
     isbn: "",
   });
+  const [coverImage, setCoverImage] = useState<File | null>(null);
+
+  const onDrop = (acceptedFiles: File[]) => {
+    if (acceptedFiles && acceptedFiles.length > 0) {
+      setCoverImage(acceptedFiles[0]);
+    }
+  };
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept: {
+      "image/*": [],
+    },
+    multiple: false,
+  });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -39,7 +54,7 @@ export const AddBookModal: React.FC<AddBookModalProps> = ({
   };
 
   const handleSubmit = async () => {
-    console.log("Adding book:", formData);
+    console.log("Adding book:", { ...formData, coverImage });
     const success = await addBook(formData);
     if (success) {
       onSuccess();
@@ -49,10 +64,10 @@ export const AddBookModal: React.FC<AddBookModalProps> = ({
         description: "",
         isbn: "",
       });
+      setCoverImage(null);
       onClose();
     }
   };
-  const theme = useTheme();
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
@@ -96,24 +111,46 @@ export const AddBookModal: React.FC<AddBookModalProps> = ({
 
           {/* Image Upload UI Hint */}
           <Box
+            {...getRootProps()}
             sx={{
               border: "2px dashed #ccc",
+              borderColor: isDragActive ? "primary.main" : "#ccc",
               borderRadius: 2,
               p: 4,
               textAlign: "center",
-              bgcolor: theme.palette.background.paper,
+              bgcolor: isDragActive ? "action.hover" : "background.paper",
               cursor: "pointer",
               "&:hover": {
-                bgcolor: theme.palette.action.hover,
+                bgcolor: "action.hover",
+                borderColor: "primary.main",
               },
             }}
           >
-            <Typography variant="body1" fontWeight="bold">
-              Drag & Drop Image Here
-            </Typography>
-            <Typography variant="caption" color="text.secondary">
-              (Implementation target: React-DnD)
-            </Typography>
+            <input {...getInputProps()} />
+            {coverImage ? (
+              <Box>
+                <Typography variant="body1" fontWeight="bold">
+                  Selected File:
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {coverImage.name}
+                </Typography>
+                <Typography variant="caption" color="text.secondary">
+                  {(coverImage.size / 1024).toFixed(2)} KB
+                </Typography>
+              </Box>
+            ) : (
+              <>
+                <Typography variant="body1" fontWeight="bold">
+                  {isDragActive
+                    ? "Drop the image here..."
+                    : "Drag & Drop Image Here"}
+                </Typography>
+                <Typography variant="caption" color="text.secondary">
+                  or click to select a file
+                </Typography>
+              </>
+            )}
           </Box>
         </Stack>
       </DialogContent>

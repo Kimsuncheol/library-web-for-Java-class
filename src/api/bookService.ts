@@ -3,6 +3,7 @@ import { Book, History } from "../types/book";
 
 export const getHistoriesAPI = async (): Promise<History[]> => {
   const response = await axiosClient.get<History[]>("/histories");
+  console.log(response.data);
   return response.data;
 };
 

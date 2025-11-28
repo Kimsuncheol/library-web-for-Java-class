@@ -37,13 +37,13 @@ export const Dashboard: React.FC = () => {
           <Typography variant="h4" component="h1">
             Library Books
           </Typography>
-          <Button
+          {/* <Button
             variant="contained"
             startIcon={<AddIcon />}
             onClick={() => setIsModalOpen(true)}
           >
             Add Book
-          </Button>
+          </Button> */}
         </Box>
 
         <Box sx={{ mb: 4 }}>

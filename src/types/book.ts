@@ -3,6 +3,7 @@ export interface Book {
   title: string;
   description: string;
   author: string;
+  // isBorrowed?: boolean;
   coverImage?: string; // Optional, as per requirements "potentially an image URL"
 }
 

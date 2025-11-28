@@ -47,7 +47,9 @@ export const BookDetailPage: React.FC = () => {
     if (!book) return;
     setSuccessMessage("");
     setError("");
+    console.log("borrowing book", book.isbn);
     const success = await borrowBook(book.isbn);
+    console.log("borrowing book", success);
     if (success) {
       setSuccessMessage("Book borrowed successfully!");
     } else {
@@ -59,7 +61,9 @@ export const BookDetailPage: React.FC = () => {
     if (!book) return;
     setSuccessMessage("");
     setError("");
+    console.log("returning book", book.isbn);
     const success = await returnBook(book.isbn);
+    console.log("returning book", success);
     if (success) {
       setSuccessMessage("Book returned successfully!");
     } else {

@@ -20,7 +20,7 @@ import { useNavigate } from "react-router-dom";
 import { getHistoriesAPI } from "../../api/bookService";
 import { History } from "../../types/book";
 
-export const BookHistoryPage: React.FC = () => {
+export function BorrowReturnHistoryPage() {
   const navigate = useNavigate();
   const [histories, setHistories] = useState<History[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -138,4 +138,4 @@ export const BookHistoryPage: React.FC = () => {
       </TableContainer>
     </Box>
   );
-};
+}
