@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   Box,
   TextField,
@@ -14,11 +14,17 @@ import {
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { useNavigate } from "react-router-dom";
+import { searchBooksAPI } from "../../api/bookService";
+import { Book } from "../../types/book";
+import { useDebounce } from "use-debounce";
 
 export const SearchBar: React.FC = () => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedTerm] = useDebounce(searchTerm, 500);
+  const [searchResults, setSearchResults] = useState<Book[]>([]);
   const anchorRef = useRef<HTMLDivElement>(null);
 
   const handleFocus = () => {
@@ -28,6 +34,20 @@ export const SearchBar: React.FC = () => {
   const handleClickAway = () => {
     setOpen(false);
   };
+
+  useEffect(() => {
+    const search = async () => {
+      if (!debouncedTerm) {
+        setSearchResults([]);
+        return;
+      }
+      const results = await searchBooksAPI(debouncedTerm);
+      setSearchResults(results);
+      setShowHistory(false);
+      setOpen(true);
+    };
+    search();
+  }, [debouncedTerm]);
 
   const mockItems = [
     "Book Item 1",
@@ -60,10 +80,14 @@ export const SearchBar: React.FC = () => {
       >
         <TextField
           fullWidth
+          value={searchTerm}
           placeholder="Search for books..."
           variant="outlined"
           onFocus={handleFocus}
-          onChange={() => setOpen(true)}
+          onChange={(e) => {
+            setSearchTerm(e.target.value);
+            setOpen(true);
+          }}
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
@@ -97,19 +121,32 @@ export const SearchBar: React.FC = () => {
                 ))}
               </List>
             ) : (
-              <Box
-                sx={{
-                  p: 1,
-                  height: "200px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <Typography variant="body2" color="textSecondary">
-                  No search history
-                </Typography>
-              </Box>
+              <List sx={{ maxHeight: "200px", overflow: "auto" }}>
+                {searchResults.length > 0 ? (
+                  searchResults.map((book) => (
+                    <ListItemButton
+                      onClick={() => navigate(`/book?isbn=${book.isbn}`)}
+                      key={book.isbn}
+                    >
+                      <ListItemText primary={book.title} />
+                    </ListItemButton>
+                  ))
+                ) : (
+                  <Box
+                    sx={{
+                      p: 1,
+                      height: "100px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <Typography variant="body2" color="textSecondary">
+                      No results found
+                    </Typography>
+                  </Box>
+                )}
+              </List>
             )}
             <Box sx={{ p: 1.5 }}>
               <FormControlLabel

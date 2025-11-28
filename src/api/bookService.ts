@@ -12,15 +12,37 @@ export const getBooks = async (): Promise<Book[]> => {
   return response.data;
 };
 
-export const getBook = async (isbn: string): Promise<Book | false> => {
+export const getBook = async (
+  isbn: string,
+  title?: string,
+  author?: string
+): Promise<Book | false> => {
   try {
     const response = await axiosClient.get<Book>("/book", {
-      params: { isbn },
+      params: { isbn, title, author },
       withCredentials: true,
     });
     return response.data;
   } catch (error) {
     return false;
+  }
+};
+
+export const searchBooksAPI = async (query: string): Promise<Book[]> => {
+  try {
+    const response = await axiosClient.get<Book | Book[] | boolean>("/book", {
+      params: { title: query },
+      withCredentials: true,
+    });
+
+    if (Array.isArray(response.data)) {
+      return response.data;
+    } else if (response.data && typeof response.data === "object") {
+      return [response.data as Book];
+    }
+    return [];
+  } catch (error) {
+    return [];
   }
 };
 
@@ -37,11 +59,16 @@ export const addBook = async (
   }
 };
 
-export const deleteBook = async (isbn: string): Promise<void> => {
-  await axiosClient.delete("/book", {
-    params: { isbn },
-    withCredentials: true,
-  });
+export const deleteBook = async (isbn: string): Promise<boolean> => {
+  try {
+    const response = await axiosClient.delete<boolean>("/book", {
+      data: { isbn },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Failed to delete book", error);
+    return false;
+  }
 };
 
 export const borrowBook = async (isbn: string): Promise<boolean> => {
