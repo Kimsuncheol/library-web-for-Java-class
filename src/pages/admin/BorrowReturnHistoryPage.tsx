@@ -116,14 +116,12 @@ export function BorrowReturnHistoryPage() {
                 <TableCell>
                   <Chip
                     label={
-                      history.content.includes("Borrowed")
+                      history.content.includes("borrow")
                         ? "Borrowed"
                         : "Returned"
                     }
                     color={
-                      history.content.includes("Borrowed")
-                        ? "primary"
-                        : "success"
+                      history.content.includes("borrow") ? "primary" : "success"
                     }
                     size="small"
                   />
